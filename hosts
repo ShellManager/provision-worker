@@ -1,0 +1,2 @@
+[nodes]
+10.10.10.244 ansible_user=root ansible_password=root
