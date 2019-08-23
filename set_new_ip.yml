@@ -4,6 +4,12 @@
   become: true
 
   tasks:
+    - name: Install NetworkManager-glib
+      yum: 
+        name: NetworkManager-glib
+        state: present
+      when: ansible_os_family == "RedHat"
+      
     - name: Find node's interface name                                                                                        
       shell: | 
         ip route | grep default | awk '{print $5;exit}'
