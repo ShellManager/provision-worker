@@ -5,7 +5,8 @@
 
   tasks:
     - name: Find node's interface name                                                                                        
-    command: "ip route | grep default|awk '{print $5;exit}''"
+      shell: | 
+        ip route | grep default | awk '{print $5;exit}'
       register: node_interface_name
 
     - name: "Configuring interface {{node_interface_name.stdout}}"                                                            
@@ -17,3 +18,9 @@
         autoconnect: yes
         ip4: "10.10.10.243"                                                                                                     
         gw4: "10.10.10.1" 
+
+    - name: Restart machine
+      shell: 'sleep 1 && shutdown -r now "Reboot triggered by Ansible" && sleep 1'
+      async: 1
+      poll: 0
+      become: true
