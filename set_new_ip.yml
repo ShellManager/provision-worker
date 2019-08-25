@@ -57,9 +57,3 @@
         regexp: '(169.254.254.254:8080)'
         line: 'mirrors.mit.edu'
       when: ansible_os_family == "Debian"
-      
-    - name: Restart machine
-      shell: 'sleep 1 && shutdown -r now "Reboot triggered by Ansible" && sleep 1'
-      async: 1
-      poll: 0
-      become: true
