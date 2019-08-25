@@ -1,0 +1,4 @@
+database: confgen_dev
+table: vms
+seek_interval: 5
+state: ready_for_provision
