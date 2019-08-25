@@ -32,17 +32,17 @@
       when: ansible_os_family == "Debian"
 
     - name: "Update Debian-based interfaces gateway"
-      replace:
+      lineinfile:
         dest: /etc/network/interfaces
-        regexp: '(169.254.251.251)'
-        replace: '{{gw}}'
+        regexp: '^(.*)169.254.251.251(.*)$'
+        line: '        gateway {{gw}}'
       when: ansible_os_family == "Debian"
 
     - name: "Update Debian-based interfaces DNS"
-      replace:
+      lineinfile:
         dest: /etc/network/interfaces
-        regexp: '(169.254.251.251)'
-        replace: '1.1.1.1'
+        regexp: '^(.*)dns-nameservers(.*)$'
+        line: '        dns-nameservers 1.1.1.1'
       when: ansible_os_family == "Debian"
 
     - name: "Remove auxilary Debian-based interfaces network attribute"
