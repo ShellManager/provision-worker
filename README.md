@@ -7,4 +7,4 @@ Hey there! This application is used to complete the deployment process, guided b
 Well, theoretically it should update the machine's IP.
 
 # Contributing
-No pull requests to this branch will be accepted
+Pull requests are welcome
