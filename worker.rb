@@ -47,7 +47,7 @@ begin
                 File.open('provision.yml', "w") do |f| 
                     f.puts(ansible_vars.to_yaml)
                 end
-                system("ansible-playbook -i hosts run_provision.yml")
+                system("ansible-playbook -i hosts set_new_ip.yml")
                 if $?.exitstatus == 0
                     puts "Provsioned VM #{row["name"]}"
                 else
