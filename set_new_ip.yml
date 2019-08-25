@@ -50,7 +50,14 @@
         regexp: '^(.*)broadcast(.*)$'
         state: absent
       when: ansible_os_family == "Debian"
-
+      
+    - name: "Replace APT repository from install time in /etc/apt/sources.list"
+      lineinfile: 
+        dest: /etc/apt/sources.list
+        regexp: '(169.254.254.254:8080)'
+        line: 'mirrors.mit.edu'
+      when: ansible_os_family == "Debian"
+      
     - name: Restart machine
       shell: 'sleep 1 && shutdown -r now "Reboot triggered by Ansible" && sleep 1'
       async: 1
