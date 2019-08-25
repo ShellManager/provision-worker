@@ -21,6 +21,7 @@
         autoconnect: yes
         ip4: "{{ip}}"                                                                                                     
         gw4: "{{gw}}" 
+        dns4: "1.1.1.1"
       when: ansible_os_family == "RedHat"
 
     - name: "Update Debian-based interfaces IP"
@@ -31,10 +32,17 @@
       when: ansible_os_family == "Debian"
 
     - name: "Update Debian-based interfaces gateway"
-      lineinfile:
+      replace:
         dest: /etc/network/interfaces
-        regexp: '^(.*)169.254.251.251(.*)$'
-        line: '        gateway {{gw}}'
+        regexp: '(169.254.251.251)'
+        replace: '{{gw}}'
+      when: ansible_os_family == "Debian"
+
+    - name: "Update Debian-based interfaces DNS"
+      replace:
+        dest: /etc/network/interfaces
+        regexp: '(169.254.251.251)'
+        replace: '1.1.1.1'
       when: ansible_os_family == "Debian"
 
     - name: "Remove auxilary Debian-based interfaces network attribute"
@@ -52,8 +60,14 @@
       when: ansible_os_family == "Debian"
       
     - name: "Replace APT repository from install time in /etc/apt/sources.list"
-      lineinfile: 
+      replace: 
         dest: /etc/apt/sources.list
         regexp: '(169.254.254.254:8080)'
-        line: 'mirrors.mit.edu'
+        replace: 'mirrors.mit.edu'
       when: ansible_os_family == "Debian"
+
+    - name: Restart machine
+      shell: 'sleep 1 && shutdown -r now "Reboot triggered by Ansible" && sleep 1'
+      async: 1
+      poll: 0
+      become: true
