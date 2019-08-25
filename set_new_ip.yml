@@ -1,15 +1,12 @@
 ---
 - hosts: nodes
 
+  vars_files:
+      - provision.yml
+
   become: true
 
   tasks:
-    - name: Install NetworkManager-glib
-      yum: 
-        name: NetworkManager-glib
-        state: present
-      when: ansible_os_family == "RedHat"
-      
     - name: Find node's interface name                                                                                        
       shell: | 
         ip route | grep default | awk '{print $5;exit}'
@@ -22,22 +19,22 @@
         type: ethernet
         state: present
         autoconnect: yes
-        ip4: "10.10.10.243"                                                                                                     
-        gw4: "10.10.10.1" 
+        ip4: "{{ip}}"                                                                                                     
+        gw4: "{{gw}}" 
       when: ansible_os_family == "RedHat"
 
     - name: "Update Debian-based interfaces IP"
       lineinfile:
         dest: /etc/network/interfaces
-        regexp: '^(.*)10.10.10.244(.*)$'
-        line: '        address 10.10.10.243'
+        regexp: "^(.*)169.254.250.250(.*)$"
+        line: "        address {{ip}}"
       when: ansible_os_family == "Debian"
 
     - name: "Update Debian-based interfaces gateway"
       lineinfile:
         dest: /etc/network/interfaces
-        regexp: '^(.*)10.10.10.1(.*)$'
-        line: '        gateway 10.10.10.1'
+        regexp: '^(.*)169.254.251.251(.*)$'
+        line: '        gateway {{gw}}'
       when: ansible_os_family == "Debian"
 
     - name: "Remove auxilary Debian-based interfaces network attribute"
